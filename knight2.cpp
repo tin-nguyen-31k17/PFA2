@@ -1,15 +1,14 @@
 #include "knight2.h"
 
 /* * * BEGIN implementation of class BaseBag * * */
-// bool BaseBag::insertFirst(BaseItem *item)
-// {
-//     return false;
-// }
+bool BaseBag::insertFirst(BaseItem * item){
+    return false;
+}
 
-// BaseItem *BaseBag::get(ItemType itemType)
-// {
-//     return nullptr;
-// }
+BaseItem *BaseBag::get(ItemType itemType)
+{
+    return nullptr;
+}
 
 string BaseBag::toString() const
 {
@@ -55,8 +54,35 @@ void ArmyKnights::printInfo() const {
         << string(50, '-') << endl;
 }
 
-ArmyKnights::ArmyKnights(const string &file_armyknights)
-{
+ArmyKnights::ArmyKnights(const string &file_armyknights) {
+    ifstream fin(file_armyknights);
+    if (!fin) {
+        cerr << "Unable to open input file" << endl;
+        exit(EXIT_FAILURE);
+    }
+
+    // read first line
+    int n;
+    if (!(fin >> n)) {
+        cerr << "Error reading first line from input file" << endl;
+        exit(EXIT_FAILURE);
+    }
+
+    if (n <= 0 || n > 1000){
+        cerr << "Invalid number of knights" << endl;
+        exit(EXIT_FAILURE);
+    }
+
+    // read the knights' information and create BaseKnight objects
+    for (int i = 0; i < n; i++) {
+        int hp, level, pd, gil, antidote;
+        if (!(fin >> hp >> level >> pd >> gil >> antidote)) {
+            cerr << "Error reading knight information from input file" << endl;
+            exit(EXIT_FAILURE);
+        }
+        knights[i] = BaseKnight::create(i+1, hp, level, gil, antidote, pd);
+        count_++;
+    }
 }
 
 ArmyKnights::~ArmyKnights()
@@ -68,10 +94,10 @@ bool ArmyKnights::fight(BaseOpponent *opponent)
     return false;
 }
 
-// bool ArmyKnights::adventure(Events *events)
-// {
-//     return false;
-// }
+bool ArmyKnights::adventure(Events *events)
+{
+    return false;
+}
 
 int ArmyKnights::count() const
 {
@@ -80,7 +106,18 @@ int ArmyKnights::count() const
 
 BaseKnight *ArmyKnights::lastKnight() const
 {
-    return nullptr;
+    if (count_ == 0) {
+        return nullptr;
+    }
+    int index = count_ - 1;
+    while (!knights[index]){
+        index--;
+        if (index < 0) {
+            // If all Knights have fallen, return nullptr.
+            return nullptr;
+        }
+    }
+    return knights[index];
 }
 
 bool ArmyKnights::hasPaladinShield() const
@@ -118,50 +155,18 @@ KnightAdventure::~KnightAdventure()
 {
 }
 
-void KnightAdventure::loadArmyKnights(const string &)
-{
-    ifstream fin(string);
-    // if (!fin) {
-    //     cerr << "Unable to open input file" << endl;
-    //     exit(EXIT_FAILURE);
-    // }
-
-    // // read first line
-    // string line;
-    // if (!getline(fin, line)) {
-    //     cerr << "Error reading first line from input file" << endl;
-    //     exit(EXIT_FAILURE);
-    // }
-
-    // istringstream iss(line);
-    // if (!(iss >> HP >> level >> remedy >> maidenkiss >> phoenixdown)) {
-    //     cerr << "Error parsing first line in input file" << endl;
-    //     exit(EXIT_FAILURE);
-    // }
-    // Knight knight(HP, level, remedy, maidenkiss, phoenixdown);
-    // if (knight.HP == 999) knight.King = 1;
-    // if (isPrime(knight.HP)) knight.Lancelot = 1;
-
-    // if (!isInputValid(HP, level, remedy, maidenkiss, phoenixdown))
-    // {
-    //     cout << "Wrong input data";
-    //     exit(EXIT_FAILURE);
-    // }
-}
-
-void KnightAdventure::loadEvents(const string &)
-{
-}
-
 void KnightAdventure::run()
 {
 }
-
 /* * * END implementation of class KnightAdventure * * */
 
 /* * * BEGIN implementation of class Events * * */
 Events::Events(const string & file_events){
     ifstream fin(file_events);
+    if (!fin) {
+        cerr << "Unable to open input file" << endl;
+        exit(EXIT_FAILURE);
+    }
     fin >> num_events;
 
     event_codes = new int[num_events];
@@ -170,7 +175,7 @@ Events::Events(const string & file_events){
         fin >> event_codes[i];
     }
 
-    fin.close();
+    fin.close();   
 }
 
 Events::~Events(){
@@ -186,5 +191,4 @@ int Events::get(int i) const
 {
     return event_codes[i];
 }
-
 /* * END implementation of class Events * * */
