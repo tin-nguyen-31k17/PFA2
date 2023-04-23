@@ -91,6 +91,7 @@ ArmyKnights::~ArmyKnights()
 
 bool ArmyKnights::fight(BaseOpponent *opponent)
 {
+    // knights[0]->fight(opponent);
     return false;
 }
 
@@ -151,12 +152,13 @@ KnightAdventure::KnightAdventure() {
     events = nullptr;
 }
 
-KnightAdventure::~KnightAdventure()
-{
+KnightAdventure::~KnightAdventure() {
+    delete armyKnights;
 }
 
 void KnightAdventure::run()
 {
+    armyKnights->printInfo();
 }
 /* * * END implementation of class KnightAdventure * * */
 

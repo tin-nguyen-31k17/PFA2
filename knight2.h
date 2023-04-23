@@ -59,12 +59,145 @@ enum OpponentType { MadBear = 0, Bandit, LordLupin, Elf, Troll, Tornbery, QueenO
 class BaseOpponent{
 protected:
     int id;
+    int level;
     int dmg;
     int gil;
     OpponentType opponentType;
 public:
-    static BaseOpponent * create(int id, int dmg, int gil, OpponentType opponentType);
+    static BaseOpponent * create(int id, int level, int dmg, int gil, OpponentType opponentType);
     virtual ~BaseOpponent() {};
+};
+
+class MadBear : public BaseOpponent {
+public:
+    MadBear(int id, int level, int dmg, int gil, OpponentType opponentType)
+    {
+        this->id = id;
+        this->level = level;
+        this->dmg = 10;
+        this->gil = gil;
+        this->opponentType = opponentType;
+    }
+};
+
+class Bandit : public BaseOpponent {
+public:
+    Bandit(int id, int level, int dmg, int gil, OpponentType opponentType)
+    {
+        this->id = id;
+        this->level = level;
+        this->dmg = 15;
+        this->gil = gil;
+        this->opponentType = opponentType;
+    }
+};
+
+class LordLupin : public BaseOpponent {
+public:
+    LordLupin(int id, int level, int dmg, int gil, OpponentType opponentType)
+    {
+        this->id = id;
+        this->level = level;
+        this->dmg = 45;
+        this->gil = gil;
+        this->opponentType = opponentType;
+    }
+};
+
+class Elf : public BaseOpponent {
+public:
+    Elf(int id, int level, int dmg, int gil, OpponentType opponentType)
+    {
+        this->id = id;
+        this->level = level;
+        this->dmg = 75;
+        this->gil = gil;
+        this->opponentType = opponentType;
+    }
+};
+
+class Troll : public BaseOpponent {
+public:
+    Troll(int id, int level, int dmg, int gil, OpponentType opponentType)
+    {
+        this->id = id;
+        this->level = level;
+        this->dmg = 95;
+        this->gil = gil;
+        this->opponentType = opponentType;
+    }
+};
+
+class Tornbery : public BaseOpponent {
+public:
+    Tornbery(int id, int level, int dmg, int gil, OpponentType opponentType)
+    {
+        this->id = id;
+        this->level = level;
+        this->dmg = dmg;
+        this->gil = gil;
+        this->opponentType = opponentType;
+    }
+};
+
+class QueenOfCards : public BaseOpponent {
+public:
+    QueenOfCards(int id, int level, int dmg, int gil, OpponentType opponentType)
+    {
+        this->id = id;
+        this->level = level;
+        this->dmg = dmg;
+        this->gil = gil;
+        this->opponentType = opponentType;
+    }
+};
+
+class NinaDeRings : public BaseOpponent {
+public:
+    NinaDeRings(int id, int level, int dmg, int gil, OpponentType opponentType)
+    {
+        this->id = id;
+        this->level = level;
+        this->dmg = dmg;
+        this->gil = gil;
+        this->opponentType = opponentType;
+    }
+};
+
+class DurianGarden : public BaseOpponent {
+public:
+    DurianGarden(int id, int level, int dmg, int gil, OpponentType opponentType)
+    {
+        this->id = id;
+        this->level = level;
+        this->dmg = dmg;
+        this->gil = gil;
+        this->opponentType = opponentType;
+    }
+};
+
+class OmegaWeapon : public BaseOpponent {
+public:
+    OmegaWeapon(int id, int level, int dmg, int gil, OpponentType opponentType)
+    {
+        this->id = id;
+        this->level = level;
+        this->dmg = dmg;
+        this->gil = gil;
+        this->opponentType = opponentType;
+    }
+};
+
+class Hades : public BaseOpponent {
+public:
+    Hades(int id, int level, int dmg, int gil, OpponentType opponentType)
+    {
+        this->id = id;
+        this->level = level;
+        this->dmg = dmg;
+        this->gil = gil;
+        this->opponentType = opponentType;
+    }
 };
 
 enum KnightType { PALADIN = 0, LANCELOT, DRAGON, NORMAL };
@@ -112,6 +245,7 @@ public:
 
     void fight(BaseOpponent* opponent) override {
         // implement fight method for PaladinKnight
+        float baseDmg = 0.06;
     }
 };
 
@@ -131,6 +265,7 @@ public:
 
     void fight(BaseOpponent* opponent) override {
         // implement fight method for LancelotKnight
+        float baseDmg = 0.05;
     }
 };
 
@@ -155,17 +290,18 @@ public:
 
     static int getPythagoreanTriple()
     {
-        int a, b, c;
-        do {
-            a = rand() % 100 + 1;
-            b = rand() % 100 + 1;
-            c = rand() % 100 + 1;
-        } while (!isPythagoreanTriple(a, b, c) || to_string(c).size() != 3);
-        return c;
+        // int a, b, c;
+        // do {
+        //     a = rand() % 100 + 1;
+        //     b = rand() % 100 + 1;
+        //     c = rand() % 100 + 1;
+        // } while (!isPythagoreanTriple(a, b, c) || to_string(c).size() != 3);
+        return 0;
     }
 
     void fight(BaseOpponent* opponent) override {
         // implement fight method for DragonKnight
+        float baseDmg = 0.075;
     }
 };
 
