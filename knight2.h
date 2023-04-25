@@ -54,7 +54,7 @@ public:
     virtual ~BaseBag() {};
 };
 
-enum OpponentType { MadBear = 0, Bandit, LordLupin, Elf, Troll, Tornbery, QueenOfCards, NinaDeRings, DurianGarden, OmegaWeapon, Hades };
+enum OpponentType { MBear = 0, Bdit, Lupin, ELF, TROLL, Tbery, QCards, NRings, DGarden, OWeapon, HADES };
 
 class BaseOpponent{
 protected:
@@ -225,7 +225,7 @@ public:
     Paladin(int id, int hp, int level, int gil, int antidote, int phoenixdownI)
     {
         this->id = id;
-        this->hp = isPrime(hp);
+        this->hp = hp;
         this->maxhp = this->hp;
         this->level = level;
         this->gil = gil;
@@ -233,16 +233,6 @@ public:
         this->phoenixdownI = phoenixdownI;
         this->knightType = PALADIN;
     }
-
-    static bool isPrime(int n)
-    {
-        if (n <= 1) return false;
-        for (int i = 2; i <= sqrt(n); i++) {
-            if (n % i == 0) return false;
-        }
-        return true;
-    }
-
     void fight(BaseOpponent* opponent) override {
         // implement fight method for PaladinKnight
         float baseDmg = 0.06;
@@ -251,10 +241,10 @@ public:
 
 class Lancelot : public BaseKnight {
 public:
-    Lancelot(int id, int level, int gil, int antidote, int phoenixdownI)
+    Lancelot(int id, int hp, int level, int gil, int antidote, int phoenixdownI)
     {
         this->id = id;
-        this->hp = 888;
+        this->hp = hp;
         this->maxhp = this->hp;
         this->level = level;
         this->gil = gil;
@@ -271,32 +261,16 @@ public:
 
 class DragonKnight : public BaseKnight {
 public:
-    DragonKnight(int id, int level, int gil, int antidote, int phoenixdownI)
+    DragonKnight(int id, int hp, int level, int gil, int antidote, int phoenixdownI)
     {
         this->id = id;
-        this->hp = getPythagoreanTriple();
+        this->hp = hp;
         this->maxhp = this->hp;
         this->level = level;
         this->gil = gil;
         this->antidote = antidote;
         this->phoenixdownI = phoenixdownI;
         this->knightType = DRAGON;
-    }
-
-    static bool isPythagoreanTriple(int a, int b, int c)
-    {
-        return (a * a + b * b == c * c);
-    }
-
-    static int getPythagoreanTriple()
-    {
-        // int a, b, c;
-        // do {
-        //     a = rand() % 100 + 1;
-        //     b = rand() % 100 + 1;
-        //     c = rand() % 100 + 1;
-        // } while (!isPythagoreanTriple(a, b, c) || to_string(c).size() != 3);
-        return 0;
     }
 
     void fight(BaseOpponent* opponent) override {
