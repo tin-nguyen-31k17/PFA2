@@ -180,19 +180,21 @@ ArmyKnights::ArmyKnights(const string &file_armyknights) {
             default:
                 break;
         }
-        // knights[i] = BaseKnight::create(i+1, hp, level, gil, antidote, pd);
         count_++;
     }
 }
 
 ArmyKnights::~ArmyKnights() {
+    for(int i = 0; i < count_; i++){
+        delete knights[i];
+    }
 }
 
-// bool ArmyKnights::fight(BaseOpponent *opponent)
-// {
-//     // knights[0]->fight(opponent);
-//     return false;
-// }
+bool ArmyKnights::fight(BaseOpponent *opponent)
+{
+    // knights[0]->fight(opponent);
+    return false;
+}
 
 bool ArmyKnights::adventure(Events *events)
 {
