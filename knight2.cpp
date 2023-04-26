@@ -1,22 +1,97 @@
 #include "knight2.h"
 
-/* * * BEGIN implementation of class BaseBag * * */
-bool BaseBag::insertFirst(BaseItem * item){
-    return false;
+/* * BEGIN implementation of submodules * * */
+bool isPrime(int n){
+    if (n <= 1) return false;
+    for (int i = 2; i <= sqrt(n); i++) {
+        if (n % i == 0) return false;
+    }
+    return true;
 }
 
-BaseItem *BaseBag::get(ItemType itemType)
-{
+bool isPythagoreanTriple(int n){
+    int a, b, c;
+    stringstream ss = stringstream(to_string(n));
+    ss >> a >> b >> c;
+    return (a * a + b * b == c * c);
+}
+
+int HPtype(int hp) {
+    //check if HP is an int between 1 & 999
+    if (hp < 1 || hp > 999) {
+        return -1;
+    }
+    //check if HP is a prime number
+    else if (isPrime(hp)) {
+        return 0;
+    }
+    //check if HP == 888
+    else if (hp == 888) {
+        return 1;
+    }
+    //check if HP has exactly 3 digits and form Pythogorean triple
+    else if (hp >= 100 && hp <= 999) {
+        return isPythagoreanTriple(hp) ? 2 : 3;
+    }
+    return 4;
+}
+/* * * END implementation of submodules * * */
+
+/* * * BEGIN implementation of class BaseBag * * */
+bool BaseBag::insertFirst(BaseItem * item){
+    if (size >= maxSize) {
+        return false; // Bag is full
+    }
+    Node* newNode = new Node(item);
+    newNode->next = head;
+    head = newNode;
+    size++;
+    return true;
+}
+BaseItem *BaseBag::get(ItemType itemType){
+    // Return the first item in the list
+    Node* current = head;
+    while (current != nullptr) {
+        if (current->item->itemType == itemType) {
+            return current->item;
+        }
+        current = current->next;
+    }
     return nullptr;
 }
 
 string BaseBag::toString() const
 {
-    return string();
+    int count = 0;
+    Node* current = head;
+    string items;
+    while (current != nullptr) {
+        if (current->item->itemType == ANTIDOTE) {
+            current = current->next;
+            continue;
+        }
+        count++;
+        items += current->item->itemType;
+        if (current->next != nullptr && current->item->itemType != ANTIDOTE) {
+            items += ",";
+        }
+        current = current->next;
+    }
+    return "Bag[count=" + to_string(count) + ";" + items + "]";
+}
+
+BaseBag::~BaseBag() {
+    // Delete all nodes in the list
+    Node* current = head;
+    while (current != nullptr) {
+        Node* next = current->next;
+        delete current->item;
+        current = next;
+    }
 }
 /* * * END implementation of class BaseBag * * */
 
-/* * BEGIN implementation of class BaseOpponent * * */
+/* * * BEGIN implementation of class BaseOpponent * * */
 BaseOpponent *BaseOpponent::create(int id, int level, int dmg, int gil, OpponentType opponentType){
     switch (opponentType)
     {
@@ -104,6 +179,159 @@ BaseKnight *BaseKnight::create(int id, int hp, int level, int gil, int antidote,
 }
 /* * * END implementation of class BaseKnight * * */
 
+/* * * BEGIN implementation of class BaseItem * * */
+class Antidote : public BaseItem {
+public:
+    virtual bool canUse(BaseKnight* knight) {
+        return knight->isPoisoned;
+    }
+
+    virtual void use(BaseKnight* knight) {
+        knight->curePoison();
+    }
+};
+
+class PhoenixDownI : public BaseItem {
+public:
+    virtual bool canUse(BaseKnight* knight) {
+        return knight->getCurrentHP() <= 0;
+    }
+
+    virtual void use(BaseKnight* knight) {
+        knight->restoreHP(knight->getMaxHP());
+    }
+};
+
+class PhoenixDownII : public BaseItem {
+public:
+    virtual bool canUse(BaseKnight* knight) {
+        return knight->getCurrentHP() < knight->getMaxHP() / 4;
+    }
+
+    virtual void use(BaseKnight* knight) {
+        knight->restoreHP(knight->getMaxHP());
+    }
+};
+
+class PhoenixDownIII : public BaseItem {
+public:
+    virtual bool canUse(BaseKnight* knight) {
+        int max_hp = knight->getMaxHP();
+        int current_hp = knight->getCurrentHP();
+
+        if (current_hp <= 0) {
+            return true;
+        }
+        else if (current_hp < max_hp / 4) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    virtual void use(BaseKnight* knight) {
+        int max_hp = knight->getMaxHP();
+        int current_hp = knight->getCurrentHP();
+
+        if (current_hp <= 0) {
+            knight->restoreHP(max_hp / 3);
+        }
+        else {
+            knight->restoreHP(max_hp / 4);
+        }
+    }
+};
+
+class PhoenixDownIV : public BaseItem {
+public:
+    virtual bool canUse(BaseKnight* knight) {
+        int max_hp = knight->getMaxHP();
+        int current_hp = knight->getCurrentHP();
+
+        if (current_hp <= 0) {
+            return true;
+        }
+        else if (current_hp < max_hp / 5) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    virtual void use(BaseKnight* knight) {
+        int max_hp = knight->getMaxHP();
+        int current_hp = knight->getCurrentHP();
+
+        if (current_hp <= 0) {
+            knight->restoreHP(max_hp / 2);
+        }
+        else {
+            knight->restoreHP(max_hp / 5);
+        }
+    }
+};
+/* * * END implementation of class BaseItem * * */
+
+/* * * BEGIN implementation of class Knight's Bag * * */
+class DragonKnightBag : public BaseBag {
+public:
+    DragonKnightBag(BaseKnight* knight) : BaseBag(knight, 14) {
+        insertFirst(new PhoenixDownI());
+        insertFirst(new PhoenixDownII());
+        insertFirst(new PhoenixDownIII());
+        insertFirst(new PhoenixDownIV());
+        insertFirst(new Antidote());
+    }
+    string toString() const {
+        return "DragonKnightBag";
+    }
+};
+
+class LancelotBag : public BaseBag {
+public:
+    LancelotBag(BaseKnight* knight) : BaseBag(knight, 16) {
+        insertFirst(new PhoenixDownI());
+        insertFirst(new PhoenixDownII());
+        insertFirst(new PhoenixDownIII());
+        insertFirst(new PhoenixDownIV());
+        insertFirst(new Antidote());
+    }
+    string toString() const {
+        return "LancelotBag";
+    }
+};
+
+class NormalBag : public BaseBag {
+public:
+    NormalBag(BaseKnight* knight) : BaseBag(knight, 19) {
+        insertFirst(new PhoenixDownI());
+        insertFirst(new PhoenixDownII());
+        insertFirst(new PhoenixDownIII());
+        insertFirst(new PhoenixDownIV());
+        insertFirst(new Antidote());
+    }
+    string toString() const {
+        return "NormalBag";
+    }
+};
+
+class PaladinBag : public BaseBag {
+public:
+    PaladinBag(BaseKnight* knight) : BaseBag(knight, 1000) {
+        insertFirst(new PhoenixDownI());
+        insertFirst(new PhoenixDownII());
+        insertFirst(new PhoenixDownIII());
+        insertFirst(new PhoenixDownIV());
+        insertFirst(new Antidote());
+    }
+    string toString() const {
+        return "PaladinBag";
+    }
+};
+/* * * END implementation of class Knight's Bag * * */
+
 /* * * BEGIN implementation of class ArmyKnights * * */
 void ArmyKnights::printInfo() const {
     cout << "No. knights: " << this->count();
@@ -117,41 +345,6 @@ void ArmyKnights::printInfo() const {
         << ";ExcaliburSword:" << this->hasExcaliburSword()
         << endl
         << string(50, '-') << endl;
-}
-
-bool isPrime(int n){
-    if (n <= 1) return false;
-    for (int i = 2; i <= sqrt(n); i++) {
-        if (n % i == 0) return false;
-    }
-    return true;
-}
-
-bool isPythagoreanTriple(int n){
-    int a, b, c;
-    stringstream ss = stringstream(to_string(n));
-    ss >> a >> b >> c;
-    return (a * a + b * b == c * c);
-}
-
-int HPtype(int hp) {
-    //check if HP is an int between 1 & 999
-    if (hp < 1 || hp > 999) {
-        return -1;
-    }
-    //check if HP is a prime number
-    else if (isPrime(hp)) {
-        return 0;
-    }
-    //check if HP == 888
-    else if (hp == 888) {
-        return 1;
-    }
-    //check if HP has exactly 3 digits and form Pythogorean triple
-    else if (hp >= 100 && hp <= 999) {
-        return isPythagoreanTriple(hp) ? 2 : 3;
-    }
-    return 4;
 }
 
 ArmyKnights::ArmyKnights(const string &file_armyknights) {
