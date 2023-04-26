@@ -284,8 +284,8 @@ public:
         insertFirst(new PhoenixDownIV());
         insertFirst(new Antidote());
     }
-    string toString() const {
-        return "DragonKnightBag";
+    string toString() const override {
+        return BaseBag::toString();   
     }
 };
 
@@ -298,8 +298,8 @@ public:
         insertFirst(new PhoenixDownIV());
         insertFirst(new Antidote());
     }
-    string toString() const {
-        return "LancelotBag";
+    string toString() const override {
+        return BaseBag::toString();   
     }
 };
 
@@ -312,8 +312,8 @@ public:
         insertFirst(new PhoenixDownIV());
         insertFirst(new Antidote());
     }
-    string toString() const {
-        return "NormalBag";
+    string toString() const override {
+        return BaseBag::toString();   
     }
 };
 
@@ -326,8 +326,8 @@ public:
         insertFirst(new PhoenixDownIV());
         insertFirst(new Antidote());
     }
-    string toString() const {
-        return "PaladinBag";
+    string toString() const override {
+        return BaseBag::toString();   
     }
 };
 /* * * END implementation of class Knight's Bag * * */
