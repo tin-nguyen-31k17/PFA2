@@ -76,7 +76,30 @@ string BaseKnight::toString() const {
     return s;
 }
 
-BaseKnight *BaseKnight::create(int id, int maxhp, int level, int gil, int antidote, int phoenixdownI){
+BaseKnight *BaseKnight::create(int id, int hp, int level, int gil, int antidote, int phoenixdownI){
+    int type = HPtype(hp);
+        switch (type){
+            case -1:
+                cout << "Invalid HP type" << endl;
+                exit(EXIT_FAILURE);
+            case 0:
+                return new Paladin(id+1, hp, level, gil, antidote, phoenixdownI);
+                break;
+            case 1:
+                return new Lancelot(id+1, hp, level, gil, antidote, phoenixdownI);
+                break;
+            case 2:
+                return new DragonKnight(id+1, hp, level, gil, antidote, phoenixdownI);
+                break;
+            case 3:
+                return new NormalKnight(id+1, hp, level, gil, antidote, phoenixdownI);
+                break;
+            case 4:
+                cout << "Invalid logic" << endl;
+                break;
+            default:
+                break;
+        }
     return nullptr;
 }
 /* * * END implementation of class BaseKnight * * */
@@ -157,29 +180,7 @@ ArmyKnights::ArmyKnights(const string &file_armyknights) {
             cerr << "Error reading knight information from input file" << endl;
             exit(EXIT_FAILURE);
         }
-        int type = HPtype(hp);
-        switch (type){
-            case -1:
-                cout << "Invalid HP type" << endl;
-                exit(EXIT_FAILURE);
-            case 0:
-                knights[i] = new Paladin(i+1, hp, level, gil, antidote, pd);
-                break;
-            case 1:
-                knights[i] = new Lancelot(i+1, hp, level, gil, antidote, pd);
-                break;
-            case 2:
-                knights[i] = new DragonKnight(i+1, hp, level, gil, antidote, pd);
-                break;
-            case 3:
-                knights[i] = new NormalKnight(i+1, hp, level, gil, antidote, pd);
-                break;
-            case 4:
-                cout << "Invalid logic" << endl;
-                break;
-            default:
-                break;
-        }
+        knights[i] = BaseKnight::create(i+1, hp, level, gil, antidote, pd);
         count_++;
     }
 }
@@ -193,17 +194,16 @@ ArmyKnights::~ArmyKnights() {
 bool ArmyKnights::fight(BaseOpponent *opponent)
 {
     // knights[0]->fight(opponent);
+    lastKnight()->fight(opponent);
     return false;
 }
 
-bool ArmyKnights::adventure(Events *events)
-{
+bool ArmyKnights::adventure(Events *events){
     return false;
 }
 
-int ArmyKnights::count() const
-{
-    return 0;
+int ArmyKnights::count() const{
+    return count_;
 }
 
 BaseKnight *ArmyKnights::lastKnight() const

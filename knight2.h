@@ -13,45 +13,154 @@ class BaseItem {
 public:
     virtual bool canUse(BaseKnight* knight) = 0;
     virtual void use(BaseKnight* knight) = 0;
-    virtual ~BaseItem() {};
 };
 
 class Antidote : public BaseItem {
 public:
-    bool canUse(BaseKnight* knight);
-    void use(BaseKnight* knight);
+    bool canUse(BaseKnight* knight) {
+        // Check if knight is poisoned
+        return knight->checkPoisoned();
+    }
+    void use(BaseKnight* knight) {
+        // Cure the poison
+        knight->curePoison();
+    }
 };
 
 class PhoenixDownI : public BaseItem {
 public:
-    bool canUse(BaseKnight* knight);
-    void use(BaseKnight* knight);
+    bool canUse(BaseKnight* knight) {
+        // Always return true
+        return true;
+    }
+    void use(BaseKnight* knight) {
+        // Revive the knight with 10% health
+        knight->revive(0.1);
+    }
 };
 
 class PhoenixDownII : public BaseItem {
 public:
-    bool canUse(BaseKnight* knight);
-    void use(BaseKnight* knight);
+    bool canUse(BaseKnight* knight) {
+        // Always return true
+        return true;
+    }
+    void use(BaseKnight* knight) {
+        // Revive the knight with 20% health
+        knight->revive(0.2);
+    }
 };
 
 class PhoenixDownIII : public BaseItem {
 public:
-    bool canUse(BaseKnight* knight);
-    void use(BaseKnight* knight);
+    bool canUse(BaseKnight* knight) {
+        // Always return true
+        return true;
+    }
+    void use(BaseKnight* knight) {
+        // Revive the knight with 30% health
+        knight->revive(0.3);
+    }
 };
 
 class PhoenixDownIV : public BaseItem {
 public:
-    bool canUse(BaseKnight* knight);
-    void use(BaseKnight* knight);
+    bool canUse(BaseKnight* knight) {
+        // Always return true
+        return true;
+    }
+    void use(BaseKnight* knight) {
+        // Revive the knight with 40% health
+        knight->revive(0.4);
+    }
 };
 
 class BaseBag {
+protected:
+    struct Node {
+        BaseItem* item;
+        Node* next;
+        Node(BaseItem* item) : item(item), next(nullptr) {}
+    };
+    Node* head;
+    BaseKnight* knight;
 public:
-    virtual bool insertFirst(BaseItem* item) = 0;
-    virtual BaseItem* get(ItemType itemType) = 0;
+    BaseBag(BaseKnight* knight) : head(nullptr), knight(knight) {}
+    virtual ~BaseBag() {
+        // Delete all nodes in the list
+        Node* current = head;
+        while (current != nullptr) {
+            Node* next = current->next;
+            delete current->item;
+            delete current;
+            current = next;
+        }
+    }
+    virtual bool insertFirst(BaseItem* item) {
+        // Add item to the beginning of the list
+        Node* node = new Node(item);
+        node->next = head;
+        head = node;
+        return true;
+    }
+    virtual BaseItem* get(ItemType itemType) {
+        // Search for item of given type and remove it from the list
+        Node* current = head;
+        Node* prev = nullptr;
+        while (current != nullptr) {
+            if (dynamic_cast<Antidote*>(current->item) != nullptr && itemType == ANTIDOTE) {
+                if (prev == nullptr) {
+                    head = current->next;
+                } else {
+                    prev->next = current->next;
+                }
+                BaseItem* item = current->item;
+                delete current;
+                return item;
+            } else if (dynamic_cast<PhoenixDownI*>(current->item) != nullptr && itemType == PHOENIXDOWN_I) {
+                if (prev == nullptr) {
+                    head = current->next;
+                } else {
+                    prev->next = current->next;
+                }
+                BaseItem* item = current->item;
+                delete current;
+                return item;
+            } else if (dynamic_cast<PhoenixDownII*>(current->item) != nullptr && itemType == PHOENIXDOWN_II) {
+                if (prev == nullptr) {
+                    head = current->next;
+                } else {
+                    prev->next = current->next;
+                }
+                BaseItem* item = current->item;
+                delete current;
+                return item;
+            } else if (dynamic_cast<PhoenixDownIII*>(current->item) != nullptr && itemType == PHOENIXDOWN_III) {
+                if (prev == nullptr) {
+                    head = current->next;
+                } else {
+                    prev->next = current->next;
+                }
+                BaseItem* item = current->item;
+                delete current;
+                return item;
+            } else if (dynamic_cast<PhoenixDownIV*>(current->item) != nullptr && itemType == PHOENIXDOWN_IV) {
+                if (prev == nullptr) {
+                    head = current->next;
+                } else {
+                    prev->next = current->next;
+                }
+                BaseItem* item = current->item;
+                delete current;
+                return item;
+            }
+            prev = current;
+            current = current->next;
+        }
+        return nullptr;
+    }
+
     virtual string toString() const = 0;
-    virtual ~BaseBag() {};
 };
 
 enum OpponentType { MBear = 0, Bdit, Lupin, ELF, TROLL, Tbery, QCards, NRings, DGarden, OWeapon, HADES };
@@ -213,10 +322,41 @@ protected:
     int phoenixdownI;
     BaseBag * bag;
     KnightType knightType;
+    bool isPoisoned = false;
 public:
     static BaseKnight * create(int id, int maxhp, int level, int gil, int antidote, int phoenixdownI);
     string toString() const;
     virtual void fight(BaseOpponent * opponent) = 0;
+    
+    bool checkPoisoned() {
+        return isPoisoned;
+    }
+    void curePoison() {
+        isPoisoned = false;
+    }
+    void revive() {
+        hp = maxhp;
+    }
+
+    virtual void takeDamage(float baseDmg) {
+        float totalDmg = baseDmg * level;
+        if (isPoisoned) {
+            // Poisoned knights take double damage
+            totalDmg *= 2;
+        }
+        hp -= totalDmg;
+        if (hp <= 0) {
+            // Knight has been defeated
+            hp = 0;
+            // Decrease the number of Phoenix Downs in the knight's inventory
+            phoenixdownI--;
+            if (phoenixdownI >= 0) {
+                // Use a Phoenix Down to revive the knight
+                revive();
+            }
+        }
+    }
+
     virtual ~BaseKnight() {};
 };
 
