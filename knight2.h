@@ -57,6 +57,7 @@ public:
         this->gil = gil;
         this->opponentType = opponentType;
     }
+    ~MadBear() {}
 };
 
 class Bandit : public BaseOpponent {
@@ -68,6 +69,7 @@ public:
         this->gil = gil;
         this->opponentType = opponentType;
     }
+    ~Bandit() {}
 };
 
 class LordLupin : public BaseOpponent {
@@ -79,6 +81,7 @@ public:
         this->gil = gil;
         this->opponentType = opponentType;
     }
+    ~LordLupin() {}
 };
 
 class Elf : public BaseOpponent {
@@ -90,6 +93,7 @@ public:
         this->gil = gil;
         this->opponentType = opponentType;
     }
+    ~Elf() {}
 };
 
 class Troll : public BaseOpponent {
@@ -101,6 +105,7 @@ public:
         this->gil = gil;
         this->opponentType = opponentType;
     }
+    ~Troll() {}
 };
 
 class Tornbery : public BaseOpponent {
@@ -112,6 +117,7 @@ public:
         this->gil = gil;
         this->opponentType = opponentType;
     }
+    ~Tornbery() {}
 };
 
 class QueenOfCards : public BaseOpponent {
@@ -123,6 +129,7 @@ public:
         this->gil = gil;
         this->opponentType = opponentType;
     }
+    ~QueenOfCards() {}
 };
 
 class NinaDeRings : public BaseOpponent {
@@ -134,6 +141,7 @@ public:
         this->gil = gil;
         this->opponentType = opponentType;
     }
+    ~NinaDeRings() {}
 };
 
 class DurianGarden : public BaseOpponent {
@@ -145,6 +153,7 @@ public:
         this->gil = gil;
         this->opponentType = opponentType;
     }
+    ~DurianGarden() {}
 };
 
 class OmegaWeapon : public BaseOpponent {
@@ -156,6 +165,7 @@ public:
         this->gil = gil;
         this->opponentType = opponentType;
     }
+    ~OmegaWeapon() {}
 };
 
 class Hades : public BaseOpponent {
@@ -167,6 +177,7 @@ public:
         this->gil = gil;
         this->opponentType = opponentType;
     }
+    ~Hades() {}
 };
 
 enum KnightType { PALADIN = 0, LANCELOT, DRAGON, NORMAL };

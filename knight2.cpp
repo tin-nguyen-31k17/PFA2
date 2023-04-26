@@ -134,6 +134,7 @@ BaseOpponent *BaseOpponent::create(int level, int dmg, int gil, OpponentType opp
     }
     return nullptr;
 }
+/* * * END implementation of class BaseOpponent * * */
 
 /* * * BEGIN implementation of class BaseKnight * * */
 string BaseKnight::toString() const {
@@ -288,11 +289,11 @@ public:
 class DragonBag : public BaseBag {
 public:
     DragonBag(BaseKnight* knight) : BaseBag(knight, 14) {
-        insertFirst(new PhoenixDownI());
-        insertFirst(new PhoenixDownII());
-        insertFirst(new PhoenixDownIII());
-        insertFirst(new PhoenixDownIV());
-        insertFirst(new Antidote());
+        // insertFirst(new PhoenixDownI());
+        // insertFirst(new PhoenixDownII());
+        // insertFirst(new PhoenixDownIII());
+        // insertFirst(new PhoenixDownIV());
+        // insertFirst(new Antidote());
     }
     string toString() const override {
         return BaseBag::toString();   
@@ -302,11 +303,11 @@ public:
 class LanceBag : public BaseBag {
 public:
     LanceBag(BaseKnight* knight) : BaseBag(knight, 16) {
-        insertFirst(new PhoenixDownI());
-        insertFirst(new PhoenixDownII());
-        insertFirst(new PhoenixDownIII());
-        insertFirst(new PhoenixDownIV());
-        insertFirst(new Antidote());
+        // insertFirst(new PhoenixDownI());
+        // insertFirst(new PhoenixDownII());
+        // insertFirst(new PhoenixDownIII());
+        // insertFirst(new PhoenixDownIV());
+        // insertFirst(new Antidote());
     }
     string toString() const override {
         return BaseBag::toString();   
@@ -316,11 +317,11 @@ public:
 class NormalBag : public BaseBag {
 public:
     NormalBag(BaseKnight* knight) : BaseBag(knight, 19) {
-        insertFirst(new PhoenixDownI());
-        insertFirst(new PhoenixDownII());
-        insertFirst(new PhoenixDownIII());
-        insertFirst(new PhoenixDownIV());
-        insertFirst(new Antidote());
+        // insertFirst(new PhoenixDownI());
+        // insertFirst(new PhoenixDownII());
+        // insertFirst(new PhoenixDownIII());
+        // insertFirst(new PhoenixDownIV());
+        // insertFirst(new Antidote());
     }
     string toString() const override {
         return BaseBag::toString();   
@@ -330,11 +331,11 @@ public:
 class PaladinBag : public BaseBag {
 public:
     PaladinBag(BaseKnight* knight) : BaseBag(knight, 1000) {
-        insertFirst(new PhoenixDownI());
-        insertFirst(new PhoenixDownII());
-        insertFirst(new PhoenixDownIII());
-        insertFirst(new PhoenixDownIV());
-        insertFirst(new Antidote());
+        // insertFirst(new PhoenixDownI());
+        // insertFirst(new PhoenixDownII());
+        // insertFirst(new PhoenixDownIII());
+        // insertFirst(new PhoenixDownIV());
+        // insertFirst(new Antidote());
     }
     string toString() const override {
         return BaseBag::toString();   
@@ -408,25 +409,39 @@ bool ArmyKnights::adventure(Events *events){
         switch (code)
         {
             case 1:
-                BaseOpponent *opponent = BaseOpponent::create(levelO, 10, 100, MBear);
-                lastKnight()->fight(opponent);
+            {
+                BaseOpponent *MadBear = BaseOpponent::create(levelO, 10, 100, MBear);
+                lastKnight()->fight(MadBear);
+                delete MadBear;
                 break;
+            }
             case 2:
-                BaseOpponent *opponent = BaseOpponent::create(levelO, 10, 100, Bdit);
-                lastKnight()->fight(opponent);
+            {
+                BaseOpponent *Bandit = BaseOpponent::create(levelO, 10, 100, Bdit);
+                lastKnight()->fight(Bandit);
+                delete Bandit;
                 break;
+            }
             case 3:
-                BaseOpponent *opponent = BaseOpponent::create(levelO, 10, 100, Lupin);
-                lastKnight()->fight(opponent);
+            {
+                BaseOpponent *LordLupin = BaseOpponent::create(levelO, 10, 100, Lupin);
+                lastKnight()->fight(LordLupin);
+                delete LordLupin;
                 break;
+            }
             case 4:
-                BaseOpponent *opponent = BaseOpponent::create(levelO, 10, 100, ELF);
-                lastKnight()->fight(opponent);
+            {
+                BaseOpponent *Elf = BaseOpponent::create(levelO, 10, 100, ELF);
+                lastKnight()->fight(Elf);
+                delete Elf;
                 break;
+            }
             default:
                 break;
         }
+        // printInfo();
     }
+    return false;
 }
 
 int ArmyKnights::count() const{
