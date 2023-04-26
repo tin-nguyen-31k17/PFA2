@@ -48,6 +48,7 @@ bool BaseBag::insertFirst(BaseItem * item){
     size++;
     return true;
 }
+
 BaseItem *BaseBag::get(ItemType itemType){
     // Return the first item in the list
     Node* current = head;
@@ -92,44 +93,44 @@ BaseBag::~BaseBag() {
 /* * * END implementation of class BaseBag * * */
 
 /* * * BEGIN implementation of class BaseOpponent * * */
-BaseOpponent *BaseOpponent::create(int id, int level, int dmg, int gil, OpponentType opponentType){
+BaseOpponent *BaseOpponent::create(int level, int dmg, int gil, OpponentType opponentType){
     switch (opponentType)
     {
-    case MBear:
-        return new MadBear(id, level, dmg, gil, opponentType);
-        break;
-    case Bdit:
-        return new Bandit(id, level, dmg, gil, opponentType);
-        break;
-    case Lupin:
-        return new LordLupin(id, level, dmg, gil, opponentType);
-        break;
-    case ELF:
-        return new Elf(id, level, dmg, gil, opponentType);
-        break;
-    case TROLL:
-        return new Troll(id, level, dmg, gil, opponentType);
-        break;
-    case Tbery:
-        return new Tornbery(id, level, dmg, gil, opponentType);
-        break;
-    case QCards:
-        return new QueenOfCards(id, level, dmg, gil, opponentType);
-        break;
-    case NRings:
-        return new NinaDeRings(id, level, dmg, gil, opponentType);
-        break;
-    case DGarden:
-        return new DurianGarden(id, level, dmg, gil, opponentType);
-        break;
-    case OWeapon:
-        return new OmegaWeapon(id, level, dmg, gil, opponentType);
-        break;
-    case HADES:
-        return new Hades(id, level, dmg, gil, opponentType);
-        break;
-    default:
-        break;
+        case MBear:
+            return new MadBear(level, dmg, gil, opponentType);
+            break;
+        case Bdit:
+            return new Bandit(level, dmg, gil, opponentType);
+            break;
+        case Lupin:
+            return new LordLupin(level, dmg, gil, opponentType);
+            break;
+        case ELF:
+            return new Elf(level, dmg, gil, opponentType);
+            break;
+        case TROLL:
+            return new Troll(level, dmg, gil, opponentType);
+            break;
+        case Tbery:
+            return new Tornbery(level, dmg, gil, opponentType);
+            break;
+        case QCards:
+            return new QueenOfCards(level, dmg, gil, opponentType);
+            break;
+        case NRings:
+            return new NinaDeRings(level, dmg, gil, opponentType);
+            break;
+        case DGarden:
+            return new DurianGarden(level, dmg, gil, opponentType);
+            break;
+        case OWeapon:
+            return new OmegaWeapon(level, dmg, gil, opponentType);
+            break;
+        case HADES:
+            return new Hades(level, dmg, gil, opponentType);
+            break;
+        default:
+            break;
     }
     return nullptr;
 }
@@ -176,6 +177,15 @@ BaseKnight *BaseKnight::create(int id, int hp, int level, int gil, int antidote,
                 break;
         }
     return nullptr;
+}
+
+void BaseKnight::fight(BaseOpponent *opponent){
+    int levelO = opponent->level;
+    if (level > levelO) {
+        gil = min(gil + opponent->gil, 999);
+    } else {
+        hp = hp - opponent->dmg * (levelO - level);
+    }
 }
 /* * * END implementation of class BaseKnight * * */
 
@@ -275,9 +285,9 @@ public:
 /* * * END implementation of class BaseItem * * */
 
 /* * * BEGIN implementation of class Knight's Bag * * */
-class DragonKnightBag : public BaseBag {
+class DragonBag : public BaseBag {
 public:
-    DragonKnightBag(BaseKnight* knight) : BaseBag(knight, 14) {
+    DragonBag(BaseKnight* knight) : BaseBag(knight, 14) {
         insertFirst(new PhoenixDownI());
         insertFirst(new PhoenixDownII());
         insertFirst(new PhoenixDownIII());
@@ -289,9 +299,9 @@ public:
     }
 };
 
-class LancelotBag : public BaseBag {
+class LanceBag : public BaseBag {
 public:
-    LancelotBag(BaseKnight* knight) : BaseBag(knight, 16) {
+    LanceBag(BaseKnight* knight) : BaseBag(knight, 16) {
         insertFirst(new PhoenixDownI());
         insertFirst(new PhoenixDownII());
         insertFirst(new PhoenixDownIII());
@@ -384,15 +394,39 @@ ArmyKnights::~ArmyKnights() {
     }
 }
 
-bool ArmyKnights::fight(BaseOpponent *opponent)
-{
+bool ArmyKnights::fight(BaseOpponent *opponent) {
     // knights[0]->fight(opponent);
     lastKnight()->fight(opponent);
     return false;
 }
 
 bool ArmyKnights::adventure(Events *events){
-    return false;
+    int n = events->count();
+    for (int i = 0; i < n; i++){
+        int code = events->get(i);
+        int levelO = (i + code) % 10 + 1;
+        switch (code)
+        {
+            case 1:
+                BaseOpponent *opponent = BaseOpponent::create(levelO, 10, 100, MBear);
+                lastKnight()->fight(opponent);
+                break;
+            case 2:
+                BaseOpponent *opponent = BaseOpponent::create(levelO, 10, 100, Bdit);
+                lastKnight()->fight(opponent);
+                break;
+            case 3:
+                BaseOpponent *opponent = BaseOpponent::create(levelO, 10, 100, Lupin);
+                lastKnight()->fight(opponent);
+                break;
+            case 4:
+                BaseOpponent *opponent = BaseOpponent::create(levelO, 10, 100, ELF);
+                lastKnight()->fight(opponent);
+                break;
+            default:
+                break;
+        }
+    }
 }
 
 int ArmyKnights::count() const{

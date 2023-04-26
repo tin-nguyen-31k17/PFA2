@@ -11,8 +11,8 @@ class BaseKnight;
 
 class BaseItem {
 public:
-    virtual bool canUse(BaseKnight* knight) = 0;
-    virtual void use(BaseKnight* knight) = 0;
+    virtual bool canUse(BaseKnight* knight);
+    virtual void use(BaseKnight* knight);
     ItemType itemType;
 };
 
@@ -39,21 +39,19 @@ enum OpponentType { MBear = 0, Bdit, Lupin, ELF, TROLL, Tbery, QCards, NRings, D
 
 class BaseOpponent{
 protected:
-    int id;
+    OpponentType opponentType;
+public:
     int level;
     int dmg;
     int gil;
-    OpponentType opponentType;
-public:
-    static BaseOpponent * create(int id, int level, int dmg, int gil, OpponentType opponentType);
+    static BaseOpponent * create(int level, int dmg, int gil, OpponentType opponentType);
     virtual ~BaseOpponent() {};
 };
 
 class MadBear : public BaseOpponent {
 public:
-    MadBear(int id, int level, int dmg, int gil, OpponentType opponentType)
+    MadBear(int level, int dmg, int gil, OpponentType opponentType)
     {
-        this->id = id;
         this->level = level;
         this->dmg = 10;
         this->gil = gil;
@@ -63,9 +61,8 @@ public:
 
 class Bandit : public BaseOpponent {
 public:
-    Bandit(int id, int level, int dmg, int gil, OpponentType opponentType)
+    Bandit(int level, int dmg, int gil, OpponentType opponentType)
     {
-        this->id = id;
         this->level = level;
         this->dmg = 15;
         this->gil = gil;
@@ -75,9 +72,8 @@ public:
 
 class LordLupin : public BaseOpponent {
 public:
-    LordLupin(int id, int level, int dmg, int gil, OpponentType opponentType)
+    LordLupin(int level, int dmg, int gil, OpponentType opponentType)
     {
-        this->id = id;
         this->level = level;
         this->dmg = 45;
         this->gil = gil;
@@ -87,9 +83,8 @@ public:
 
 class Elf : public BaseOpponent {
 public:
-    Elf(int id, int level, int dmg, int gil, OpponentType opponentType)
+    Elf(int level, int dmg, int gil, OpponentType opponentType)
     {
-        this->id = id;
         this->level = level;
         this->dmg = 75;
         this->gil = gil;
@@ -99,9 +94,8 @@ public:
 
 class Troll : public BaseOpponent {
 public:
-    Troll(int id, int level, int dmg, int gil, OpponentType opponentType)
+    Troll(int level, int dmg, int gil, OpponentType opponentType)
     {
-        this->id = id;
         this->level = level;
         this->dmg = 95;
         this->gil = gil;
@@ -111,9 +105,8 @@ public:
 
 class Tornbery : public BaseOpponent {
 public:
-    Tornbery(int id, int level, int dmg, int gil, OpponentType opponentType)
+    Tornbery(int level, int dmg, int gil, OpponentType opponentType)
     {
-        this->id = id;
         this->level = level;
         this->dmg = dmg;
         this->gil = gil;
@@ -123,9 +116,8 @@ public:
 
 class QueenOfCards : public BaseOpponent {
 public:
-    QueenOfCards(int id, int level, int dmg, int gil, OpponentType opponentType)
+    QueenOfCards(int level, int dmg, int gil, OpponentType opponentType)
     {
-        this->id = id;
         this->level = level;
         this->dmg = dmg;
         this->gil = gil;
@@ -135,9 +127,8 @@ public:
 
 class NinaDeRings : public BaseOpponent {
 public:
-    NinaDeRings(int id, int level, int dmg, int gil, OpponentType opponentType)
+    NinaDeRings(int level, int dmg, int gil, OpponentType opponentType)
     {
-        this->id = id;
         this->level = level;
         this->dmg = dmg;
         this->gil = gil;
@@ -147,9 +138,8 @@ public:
 
 class DurianGarden : public BaseOpponent {
 public:
-    DurianGarden(int id, int level, int dmg, int gil, OpponentType opponentType)
+    DurianGarden(int level, int dmg, int gil, OpponentType opponentType)
     {
-        this->id = id;
         this->level = level;
         this->dmg = dmg;
         this->gil = gil;
@@ -159,9 +149,8 @@ public:
 
 class OmegaWeapon : public BaseOpponent {
 public:
-    OmegaWeapon(int id, int level, int dmg, int gil, OpponentType opponentType)
+    OmegaWeapon(int level, int dmg, int gil, OpponentType opponentType)
     {
-        this->id = id;
         this->level = level;
         this->dmg = dmg;
         this->gil = gil;
@@ -171,9 +160,8 @@ public:
 
 class Hades : public BaseOpponent {
 public:
-    Hades(int id, int level, int dmg, int gil, OpponentType opponentType)
+    Hades(int level, int dmg, int gil, OpponentType opponentType)
     {
-        this->id = id;
         this->level = level;
         this->dmg = dmg;
         this->gil = gil;
@@ -189,6 +177,7 @@ protected:
     int hp;
     int maxhp;
     int level;
+    double baseDmg;
     int gil;
     int antidote;
     int phoenixdownI;
@@ -197,7 +186,7 @@ protected:
 public:
     static BaseKnight * create(int id, int maxhp, int level, int gil, int antidote, int phoenixdownI);
     string toString() const;
-    virtual void fight(BaseOpponent * opponent) = 0;
+    virtual void fight(BaseOpponent * opponent);
     int getCurrentHP() const { return hp; }
     int getMaxHP() const { return maxhp; }
     void restoreHP(int amount) { hp = min(maxhp, hp + amount); }
@@ -215,6 +204,7 @@ public:
         this->hp = hp;
         this->maxhp = this->hp;
         this->level = level;
+        this->baseDmg = 0.06;
         this->gil = gil;
         this->antidote = antidote;
         this->phoenixdownI = phoenixdownI;
@@ -222,7 +212,7 @@ public:
     }
     void fight(BaseOpponent* opponent) override {
         // implement fight method for PaladinKnight
-        float baseDmg = 0.06;
+        return BaseKnight::fight(opponent);
     }
 };
 
@@ -234,6 +224,7 @@ public:
         this->hp = hp;
         this->maxhp = this->hp;
         this->level = level;
+        this->baseDmg = 0.05;
         this->gil = gil;
         this->antidote = antidote;
         this->phoenixdownI = phoenixdownI;
@@ -242,7 +233,7 @@ public:
 
     void fight(BaseOpponent* opponent) override {
         // implement fight method for LancelotKnight
-        float baseDmg = 0.05;
+        return BaseKnight::fight(opponent);
     }
 };
 
@@ -254,6 +245,7 @@ public:
         this->hp = hp;
         this->maxhp = this->hp;
         this->level = level;
+        this->baseDmg = 0.075;
         this->gil = gil;
         this->antidote = antidote;
         this->phoenixdownI = phoenixdownI;
@@ -262,7 +254,7 @@ public:
 
     void fight(BaseOpponent* opponent) override {
         // implement fight method for DragonKnight
-        float baseDmg = 0.075;
+        return BaseKnight::fight(opponent);
     }
 };
 
@@ -282,6 +274,7 @@ public:
 
     void fight(BaseOpponent* opponent) override {
         // implement fight method for NormalKnight
+        return BaseKnight::fight(opponent);
     }
 };
 
@@ -321,10 +314,9 @@ class KnightAdventure {
 private:
     ArmyKnights * armyKnights;
     Events * events;
-
 public:
     KnightAdventure();
-    ~KnightAdventure(); // TODO:
+    ~KnightAdventure();
 
     void loadArmyKnights(const string & filename){
         if (armyKnights != nullptr) {
