@@ -1,7 +1,7 @@
 #include "knight2.h"
 
 /* * BEGIN implementation of submodules * * */
-bool isPrime(int n){
+bool isPrime(int n) {
     if (n <= 1) return false;
     for (int i = 2; i <= sqrt(n); i++) {
         if (n % i == 0) return false;
@@ -9,7 +9,7 @@ bool isPrime(int n){
     return true;
 }
 
-bool isPythagoreanTriple(int n){
+bool isPythagoreanTriple(int n) {
     int a, b, c;
     stringstream ss = stringstream(to_string(n));
     ss >> a >> b >> c;
@@ -38,7 +38,7 @@ int HPtype(int hp) {
 /* * * END implementation of submodules * * */
 
 /* * * BEGIN implementation of class BaseBag * * */
-bool BaseBag::insertFirst(BaseItem * item){
+bool BaseBag::insertFirst(BaseItem * item) {
     if (size >= maxSize) {
         return false; // Bag is full
     }
@@ -49,7 +49,7 @@ bool BaseBag::insertFirst(BaseItem * item){
     return true;
 }
 
-BaseItem *BaseBag::get(ItemType itemType){
+BaseItem *BaseBag::get(ItemType itemType) {
     // Return the first item in the list
     Node* current = head;
     while (current != nullptr) {
@@ -61,8 +61,8 @@ BaseItem *BaseBag::get(ItemType itemType){
     return nullptr;
 }
 
-string BaseBag::toString() const
-{
+string BaseBag::toString() const {
+    cout << "test" << endl;
     int count = 0;
     Node* current = head;
     string items;
@@ -93,6 +93,138 @@ BaseBag::~BaseBag() {
 /* * * END implementation of class BaseBag * * */
 
 /* * * BEGIN implementation of class BaseOpponent * * */
+class MadBear : public BaseOpponent {
+public:
+    MadBear(int level, int dmg, int gil, OpponentType opponentType)
+    {
+        this->level = level;
+        this->dmg = 10;
+        this->gil = gil;
+        this->opponentType = opponentType;
+    }
+    ~MadBear() {}
+};
+
+class Bandit : public BaseOpponent {
+public:
+    Bandit(int level, int dmg, int gil, OpponentType opponentType)
+    {
+        this->level = level;
+        this->dmg = 15;
+        this->gil = gil;
+        this->opponentType = opponentType;
+    }
+    ~Bandit() {}
+};
+
+class LordLupin : public BaseOpponent {
+public:
+    LordLupin(int level, int dmg, int gil, OpponentType opponentType)
+    {
+        this->level = level;
+        this->dmg = 45;
+        this->gil = gil;
+        this->opponentType = opponentType;
+    }
+    ~LordLupin() {}
+};
+
+class Elf : public BaseOpponent {
+public:
+    Elf(int level, int dmg, int gil, OpponentType opponentType)
+    {
+        this->level = level;
+        this->dmg = 75;
+        this->gil = gil;
+        this->opponentType = opponentType;
+    }
+    ~Elf() {}
+};
+
+class Troll : public BaseOpponent {
+public:
+    Troll(int level, int dmg, int gil, OpponentType opponentType)
+    {
+        this->level = level;
+        this->dmg = 95;
+        this->gil = gil;
+        this->opponentType = opponentType;
+    }
+    ~Troll() {}
+};
+
+class Tornbery : public BaseOpponent {
+public:
+    Tornbery(int level, int dmg, int gil, OpponentType opponentType)
+    {
+        this->level = level;
+        this->dmg = dmg;
+        this->gil = gil;
+        this->opponentType = opponentType;
+    }
+    ~Tornbery() {}
+};
+
+class QueenOfCards : public BaseOpponent {
+public:
+    QueenOfCards(int level, int dmg, int gil, OpponentType opponentType)
+    {
+        this->level = level;
+        this->dmg = dmg;
+        this->gil = gil;
+        this->opponentType = opponentType;
+    }
+    ~QueenOfCards() {}
+};
+
+class NinaDeRings : public BaseOpponent {
+public:
+    NinaDeRings(int level, int dmg, int gil, OpponentType opponentType)
+    {
+        this->level = level;
+        this->dmg = dmg;
+        this->gil = gil;
+        this->opponentType = opponentType;
+    }
+    ~NinaDeRings() {}
+};
+
+class DurianGarden : public BaseOpponent {
+public:
+    DurianGarden(int level, int dmg, int gil, OpponentType opponentType)
+    {
+        this->level = level;
+        this->dmg = dmg;
+        this->gil = gil;
+        this->opponentType = opponentType;
+    }
+    ~DurianGarden() {}
+};
+
+class OmegaWeapon : public BaseOpponent {
+public:
+    OmegaWeapon(int level, int dmg, int gil, OpponentType opponentType)
+    {
+        this->level = level;
+        this->dmg = dmg;
+        this->gil = gil;
+        this->opponentType = opponentType;
+    }
+    ~OmegaWeapon() {}
+};
+
+class Hades : public BaseOpponent {
+public:
+    Hades(int level, int dmg, int gil, OpponentType opponentType)
+    {
+        this->level = level;
+        this->dmg = dmg;
+        this->gil = gil;
+        this->opponentType = opponentType;
+    }
+    ~Hades() {}
+};
+
 BaseOpponent *BaseOpponent::create(int level, int dmg, int gil, OpponentType opponentType){
     switch (opponentType)
     {
@@ -136,60 +268,6 @@ BaseOpponent *BaseOpponent::create(int level, int dmg, int gil, OpponentType opp
 }
 /* * * END implementation of class BaseOpponent * * */
 
-/* * * BEGIN implementation of class BaseKnight * * */
-string BaseKnight::toString() const {
-    string typeString[4] = {"PALADIN", "LANCELOT", "DRAGON", "NORMAL"};
-    // inefficient version, students can change these code
-    //      but the format output must be the same
-    string s("");
-    s += "[Knight:id:" + to_string(id) 
-        + ",hp:" + to_string(hp) 
-        + ",maxhp:" + to_string(maxhp)
-        + ",level:" + to_string(level)
-        + ",gil:" + to_string(gil)
-        + "," + bag->toString()
-        + ",knight_type:" + typeString[knightType]
-        + "]";
-    return s;
-}
-
-BaseKnight *BaseKnight::create(int id, int hp, int level, int gil, int antidote, int phoenixdownI){
-    int type = HPtype(hp);
-        switch (type){
-            case -1:
-                cout << "Invalid HP type" << endl;
-                exit(EXIT_FAILURE);
-            case 0:
-                return new Paladin(id+1, hp, level, gil, antidote, phoenixdownI);
-                break;
-            case 1:
-                return new Lancelot(id+1, hp, level, gil, antidote, phoenixdownI);
-                break;
-            case 2:
-                return new DragonKnight(id+1, hp, level, gil, antidote, phoenixdownI);
-                break;
-            case 3:
-                return new NormalKnight(id+1, hp, level, gil, antidote, phoenixdownI);
-                break;
-            case 4:
-                cout << "Invalid logic" << endl;
-                break;
-            default:
-                break;
-        }
-    return nullptr;
-}
-
-void BaseKnight::fight(BaseOpponent *opponent){
-    int levelO = opponent->level;
-    if (level > levelO) {
-        gil = min(gil + opponent->gil, 999);
-    } else {
-        hp = hp - opponent->dmg * (levelO - level);
-    }
-}
-/* * * END implementation of class BaseKnight * * */
-
 /* * * BEGIN implementation of class BaseItem * * */
 class Antidote : public BaseItem {
 public:
@@ -200,6 +278,7 @@ public:
     virtual void use(BaseKnight* knight) {
         knight->curePoison();
     }
+    ~Antidote() {}
 };
 
 class PhoenixDownI : public BaseItem {
@@ -211,6 +290,7 @@ public:
     virtual void use(BaseKnight* knight) {
         knight->restoreHP(knight->getMaxHP());
     }
+    ~PhoenixDownI () {}
 };
 
 class PhoenixDownII : public BaseItem {
@@ -222,6 +302,7 @@ public:
     virtual void use(BaseKnight* knight) {
         knight->restoreHP(knight->getMaxHP());
     }
+    ~PhoenixDownII () {}
 };
 
 class PhoenixDownIII : public BaseItem {
@@ -252,6 +333,8 @@ public:
             knight->restoreHP(max_hp / 4);
         }
     }
+
+    ~PhoenixDownIII () {}
 };
 
 class PhoenixDownIV : public BaseItem {
@@ -282,66 +365,238 @@ public:
             knight->restoreHP(max_hp / 5);
         }
     }
+
+    ~PhoenixDownIV () {}
 };
 /* * * END implementation of class BaseItem * * */
 
 /* * * BEGIN implementation of class Knight's Bag * * */
-class DragonBag : public BaseBag {
+class PaladinBag : public BaseBag {
 public:
-    DragonBag(BaseKnight* knight) : BaseBag(knight, 14) {
-        // insertFirst(new PhoenixDownI());
-        // insertFirst(new PhoenixDownII());
-        // insertFirst(new PhoenixDownIII());
-        // insertFirst(new PhoenixDownIV());
-        // insertFirst(new Antidote());
+    PaladinBag(BaseKnight* knight, int a, int b) : BaseBag(knight, -1) {
+        // Initialize bag with any provided items
+        for (int i = 0; i < a; i++) {
+            insertFirst(new PhoenixDownI());
+        }
+        for (int i = 0; i < b; i++) {
+            insertFirst(new Antidote());
+        }
     }
     string toString() const override {
-        return BaseBag::toString();   
+        return BaseBag::toString();
     }
+    ~PaladinBag() {}
 };
 
-class LanceBag : public BaseBag {
+class LancelotBag : public BaseBag {
 public:
-    LanceBag(BaseKnight* knight) : BaseBag(knight, 16) {
-        // insertFirst(new PhoenixDownI());
-        // insertFirst(new PhoenixDownII());
-        // insertFirst(new PhoenixDownIII());
-        // insertFirst(new PhoenixDownIV());
-        // insertFirst(new Antidote());
+    LancelotBag(BaseKnight* knight, int a, int b) : BaseBag(knight, 16) {
+        // Initialize bag with any provided items
+        for (int i = 0; i < a; i++) {
+            insertFirst(new PhoenixDownI());
+        }
+        for (int i = 0; i < b; i++) {
+            insertFirst(new Antidote());
+        }
     }
     string toString() const override {
-        return BaseBag::toString();   
+        return BaseBag::toString();
     }
+    ~LancelotBag() {}
 };
 
 class NormalBag : public BaseBag {
 public:
-    NormalBag(BaseKnight* knight) : BaseBag(knight, 19) {
-        // insertFirst(new PhoenixDownI());
-        // insertFirst(new PhoenixDownII());
-        // insertFirst(new PhoenixDownIII());
-        // insertFirst(new PhoenixDownIV());
-        // insertFirst(new Antidote());
+    NormalBag(BaseKnight* knight, int a, int b) : BaseBag(knight, 19) {
+        // Initialize bag with any provided items
+        for (int i = 0; i < a; i++) {
+            insertFirst(new PhoenixDownI());
+        }
+        for (int i = 0; i < b; i++) {
+            insertFirst(new Antidote());
+        }
     }
     string toString() const override {
-        return BaseBag::toString();   
+        return BaseBag::toString();
+    }
+    ~NormalBag() {}
+};
+
+class DragonBag : public BaseBag {
+public:
+    DragonBag(BaseKnight* knight, int a, int b) : BaseBag(knight, 14) {
+        // Initialize bag with any provided items
+        for (int i = 0; i < a; i++) {
+            insertFirst(new PhoenixDownI());
+        }
+        // Dragon Knight does not have antidote in their bag
+        if (b > 0) {
+            // If the Dragon Knight picks up an antidote, pass it to the Knight in front
+            if (knight->getFront() != nullptr) {
+                knight->getFront()->getBag()->insertFirst(new Antidote());
+            }
+        }
+    }
+    string toString() const override {
+        return BaseBag::toString();
+    }
+    ~DragonBag() {}
+};
+/* * * END implementation of class Knight's Bag * * */
+
+/* * * BEGIN implementation of class BaseKnight * * */
+string BaseKnight::toString() const {
+    string typeString[4] = {"PALADIN", "LANCELOT", "DRAGON", "NORMAL"};
+    stringstream ss;
+    ss << "[Knight:id:" << this->id 
+       << ",hp:" << this->hp
+       << ",maxhp:" << this->maxhp
+       << ",level:" << this->level
+       << ",gil:" << this->gil
+       << "," << this->bag->toString()
+       << ",knight_type:" << typeString[this->knightType]
+       << "]";
+    return ss.str();
+}
+// string BaseKnight::toString() const {
+//     string typeString[4] = {"PALADIN", "LANCELOT", "DRAGON", "NORMAL"};
+//     // inefficient version, students can change these code
+//     //      but the format output must be the same
+//     string s("");
+//     s += "[Knight:id:" + to_string(id) 
+//         + ",hp:" + to_string(hp) 
+//         + ",maxhp:" + to_string(maxhp)
+//         + ",level:" + to_string(level)
+//         + ",gil:" + to_string(gil)
+//         // + "," + bag->toString()
+//         + ",knight_type:" + typeString[knightType]
+//         + "]";
+//     return s;
+// }
+
+
+class Paladin : public BaseKnight {
+public:
+    Paladin(int id, int hp, int level, int gil, int antidote, int phoenixdownI)
+    {
+        this->id = id;
+        this->hp = hp;
+        this->maxhp = this->hp;
+        this->level = level;
+        this->baseDmg = 0.06;
+        this->gil = gil;
+        this->antidote = antidote;
+        this->phoenixdownI = phoenixdownI;
+        this->bag = new PaladinBag(this, phoenixdownI, antidote);
+        this->knightType = PALADIN;
+    }
+    void fight(BaseOpponent* opponent) override {
+        // implement fight method for PaladinKnight
+        return BaseKnight::fight(opponent);
     }
 };
 
-class PaladinBag : public BaseBag {
+class Lancelot : public BaseKnight {
 public:
-    PaladinBag(BaseKnight* knight) : BaseBag(knight, 1000) {
-        // insertFirst(new PhoenixDownI());
-        // insertFirst(new PhoenixDownII());
-        // insertFirst(new PhoenixDownIII());
-        // insertFirst(new PhoenixDownIV());
-        // insertFirst(new Antidote());
+    Lancelot(int id, int hp, int level, int gil, int antidote, int phoenixdownI)
+    {
+        this->id = id;
+        this->hp = hp;
+        this->maxhp = this->hp;
+        this->level = level;
+        this->baseDmg = 0.05;
+        this->gil = gil;
+        this->antidote = antidote;
+        this->phoenixdownI = phoenixdownI;
+        this->bag = new LancelotBag(this, phoenixdownI, antidote);
+        this->knightType = LANCELOT;
     }
-    string toString() const override {
-        return BaseBag::toString();   
+
+    void fight(BaseOpponent* opponent) override {
+        // implement fight method for LancelotKnight
+        return BaseKnight::fight(opponent);
     }
 };
-/* * * END implementation of class Knight's Bag * * */
+
+class DragonKnight : public BaseKnight {
+public:
+    DragonKnight(int id, int hp, int level, int gil, int antidote, int phoenixdownI)
+    {
+        this->id = id;
+        this->hp = hp;
+        this->maxhp = this->hp;
+        this->level = level;
+        this->baseDmg = 0.075;
+        this->gil = gil;
+        this->antidote = antidote;
+        this->phoenixdownI = phoenixdownI;
+        this->bag = new DragonBag(this, phoenixdownI, antidote);
+        this->knightType = DRAGON;
+    }
+
+    void fight(BaseOpponent* opponent) override {
+        // implement fight method for DragonKnight
+        return BaseKnight::fight(opponent);
+    }
+};
+
+class NormalKnight : public BaseKnight {
+public:
+    NormalKnight(int id, int hp, int level, int gil, int antidote, int phoenixdownI)
+    {
+        this->id = id;
+        this->hp = hp;
+        this->maxhp = this->hp;
+        this->level = level;
+        this->gil = gil;
+        this->antidote = antidote;
+        this->phoenixdownI = phoenixdownI;
+        this->bag = new NormalBag(this, phoenixdownI, antidote);
+        this->knightType = NORMAL;
+    }
+
+    void fight(BaseOpponent* opponent) override {
+        // implement fight method for NormalKnight
+        return BaseKnight::fight(opponent);
+    }
+};
+
+BaseKnight *BaseKnight::create(int id, int hp, int level, int gil, int antidote, int phoenixdownI){
+    int type = HPtype(hp);
+        switch (type){
+            case -1:
+                cout << "Invalid HP type" << endl;
+                exit(EXIT_FAILURE);
+            case 0:
+                return new Paladin(id, hp, level, gil, antidote, phoenixdownI);
+                break;
+            case 1:
+                return new Lancelot(id, hp, level, gil, antidote, phoenixdownI);
+                break;
+            case 2:
+                return new DragonKnight(id, hp, level, gil, antidote, phoenixdownI);
+                break;
+            case 3:
+                return new NormalKnight(id, hp, level, gil, antidote, phoenixdownI);
+                break;
+            case 4:
+                cout << "Invalid logic" << endl;
+                break;
+            default:
+                break;
+        }
+    return nullptr;
+}
+
+void BaseKnight::fight(BaseOpponent *opponent){
+    int levelO = opponent->level;
+    if (level > levelO) {
+        gil = min(gil + opponent->gil, 999);
+    } else {
+        hp = hp - opponent->dmg * (levelO - level);
+    }
+}
+/* * * END implementation of class BaseKnight * * */
 
 /* * * BEGIN implementation of class ArmyKnights * * */
 void ArmyKnights::printInfo() const {
@@ -386,6 +641,10 @@ ArmyKnights::ArmyKnights(const string &file_armyknights) {
         }
         knights[i] = BaseKnight::create(i+1, hp, level, gil, antidote, pd);
         count_++;
+        // Set nextKnight attribute of current knight object
+        if (i < n - 1) {
+            knights[i]->setNextKnight(knights[i+1]);
+        }
     }
 }
 
@@ -439,7 +698,7 @@ bool ArmyKnights::adventure(Events *events){
             default:
                 break;
         }
-        // printInfo();
+        printInfo();
     }
     return false;
 }
@@ -464,23 +723,19 @@ BaseKnight *ArmyKnights::lastKnight() const
     return knights[index];
 }
 
-bool ArmyKnights::hasPaladinShield() const
-{
+bool ArmyKnights::hasPaladinShield() const {
     return false;
 }
 
-bool ArmyKnights::hasLancelotSpear() const
-{
+bool ArmyKnights::hasLancelotSpear() const {
     return false;
 }
 
-bool ArmyKnights::hasGuinevereHair() const
-{
+bool ArmyKnights::hasGuinevereHair() const {
     return false;
 }
 
-bool ArmyKnights::hasExcaliburSword() const
-{
+bool ArmyKnights::hasExcaliburSword() const {
     return false;
 }
 
@@ -522,17 +777,22 @@ Events::Events(const string & file_events){
     fin.close();   
 }
 
-Events::~Events(){
+Events::~Events() {
     delete[] event_codes;
 }
 
-int Events::count() const
-{
+int Events::count() const {
     return num_events;
 }
 
-int Events::get(int i) const
-{
+int Events::get(int i) const {
     return event_codes[i];
 }
 /* * END implementation of class Events * * */
+
+bool BaseItem::canUse(BaseKnight *knight) {
+    return false;
+}
+
+void BaseItem::use(BaseKnight *knight) {
+}

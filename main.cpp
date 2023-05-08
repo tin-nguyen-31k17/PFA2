@@ -15,7 +15,7 @@ int main(int argc, char ** argv) {
         exit(1);
     }
     
-    // BEBGIN
+    // BEGIN
     KnightAdventure * knightAdventure = new KnightAdventure();
     knightAdventure->loadArmyKnights(file_armyknights);
     knightAdventure->loadEvents(file_events);

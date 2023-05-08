@@ -16,6 +16,7 @@ public:
     ItemType itemType;
 };
 
+
 class BaseBag {
 protected:
     int maxSize;
@@ -35,6 +36,7 @@ public:
     virtual string toString() const = 0;
 };
 
+
 enum OpponentType { MBear = 0, Bdit, Lupin, ELF, TROLL, Tbery, QCards, NRings, DGarden, OWeapon, HADES };
 
 class BaseOpponent{
@@ -48,137 +50,6 @@ public:
     virtual ~BaseOpponent() {};
 };
 
-class MadBear : public BaseOpponent {
-public:
-    MadBear(int level, int dmg, int gil, OpponentType opponentType)
-    {
-        this->level = level;
-        this->dmg = 10;
-        this->gil = gil;
-        this->opponentType = opponentType;
-    }
-    ~MadBear() {}
-};
-
-class Bandit : public BaseOpponent {
-public:
-    Bandit(int level, int dmg, int gil, OpponentType opponentType)
-    {
-        this->level = level;
-        this->dmg = 15;
-        this->gil = gil;
-        this->opponentType = opponentType;
-    }
-    ~Bandit() {}
-};
-
-class LordLupin : public BaseOpponent {
-public:
-    LordLupin(int level, int dmg, int gil, OpponentType opponentType)
-    {
-        this->level = level;
-        this->dmg = 45;
-        this->gil = gil;
-        this->opponentType = opponentType;
-    }
-    ~LordLupin() {}
-};
-
-class Elf : public BaseOpponent {
-public:
-    Elf(int level, int dmg, int gil, OpponentType opponentType)
-    {
-        this->level = level;
-        this->dmg = 75;
-        this->gil = gil;
-        this->opponentType = opponentType;
-    }
-    ~Elf() {}
-};
-
-class Troll : public BaseOpponent {
-public:
-    Troll(int level, int dmg, int gil, OpponentType opponentType)
-    {
-        this->level = level;
-        this->dmg = 95;
-        this->gil = gil;
-        this->opponentType = opponentType;
-    }
-    ~Troll() {}
-};
-
-class Tornbery : public BaseOpponent {
-public:
-    Tornbery(int level, int dmg, int gil, OpponentType opponentType)
-    {
-        this->level = level;
-        this->dmg = dmg;
-        this->gil = gil;
-        this->opponentType = opponentType;
-    }
-    ~Tornbery() {}
-};
-
-class QueenOfCards : public BaseOpponent {
-public:
-    QueenOfCards(int level, int dmg, int gil, OpponentType opponentType)
-    {
-        this->level = level;
-        this->dmg = dmg;
-        this->gil = gil;
-        this->opponentType = opponentType;
-    }
-    ~QueenOfCards() {}
-};
-
-class NinaDeRings : public BaseOpponent {
-public:
-    NinaDeRings(int level, int dmg, int gil, OpponentType opponentType)
-    {
-        this->level = level;
-        this->dmg = dmg;
-        this->gil = gil;
-        this->opponentType = opponentType;
-    }
-    ~NinaDeRings() {}
-};
-
-class DurianGarden : public BaseOpponent {
-public:
-    DurianGarden(int level, int dmg, int gil, OpponentType opponentType)
-    {
-        this->level = level;
-        this->dmg = dmg;
-        this->gil = gil;
-        this->opponentType = opponentType;
-    }
-    ~DurianGarden() {}
-};
-
-class OmegaWeapon : public BaseOpponent {
-public:
-    OmegaWeapon(int level, int dmg, int gil, OpponentType opponentType)
-    {
-        this->level = level;
-        this->dmg = dmg;
-        this->gil = gil;
-        this->opponentType = opponentType;
-    }
-    ~OmegaWeapon() {}
-};
-
-class Hades : public BaseOpponent {
-public:
-    Hades(int level, int dmg, int gil, OpponentType opponentType)
-    {
-        this->level = level;
-        this->dmg = dmg;
-        this->gil = gil;
-        this->opponentType = opponentType;
-    }
-    ~Hades() {}
-};
 
 enum KnightType { PALADIN = 0, LANCELOT, DRAGON, NORMAL };
 
@@ -194,6 +65,7 @@ protected:
     int phoenixdownI;
     BaseBag * bag;
     KnightType knightType;
+    BaseKnight * nextKnight;
 public:
     static BaseKnight * create(int id, int maxhp, int level, int gil, int antidote, int phoenixdownI);
     string toString() const;
@@ -204,90 +76,12 @@ public:
     bool isPoisoned = false;
     void curePoison() { isPoisoned = false; }
     KnightType getKnightType() { return knightType; }
+    void setNextKnight(BaseKnight *knight) { nextKnight = knight; }
+    BaseKnight *getFront() { return nextKnight; }
+    BaseBag *getBag() { return bag; }
     virtual ~BaseKnight() {};
 };
 
-class Paladin : public BaseKnight {
-public:
-    Paladin(int id, int hp, int level, int gil, int antidote, int phoenixdownI)
-    {
-        this->id = id;
-        this->hp = hp;
-        this->maxhp = this->hp;
-        this->level = level;
-        this->baseDmg = 0.06;
-        this->gil = gil;
-        this->antidote = antidote;
-        this->phoenixdownI = phoenixdownI;
-        this->knightType = PALADIN;
-    }
-    void fight(BaseOpponent* opponent) override {
-        // implement fight method for PaladinKnight
-        return BaseKnight::fight(opponent);
-    }
-};
-
-class Lancelot : public BaseKnight {
-public:
-    Lancelot(int id, int hp, int level, int gil, int antidote, int phoenixdownI)
-    {
-        this->id = id;
-        this->hp = hp;
-        this->maxhp = this->hp;
-        this->level = level;
-        this->baseDmg = 0.05;
-        this->gil = gil;
-        this->antidote = antidote;
-        this->phoenixdownI = phoenixdownI;
-        this->knightType = LANCELOT;
-    }
-
-    void fight(BaseOpponent* opponent) override {
-        // implement fight method for LancelotKnight
-        return BaseKnight::fight(opponent);
-    }
-};
-
-class DragonKnight : public BaseKnight {
-public:
-    DragonKnight(int id, int hp, int level, int gil, int antidote, int phoenixdownI)
-    {
-        this->id = id;
-        this->hp = hp;
-        this->maxhp = this->hp;
-        this->level = level;
-        this->baseDmg = 0.075;
-        this->gil = gil;
-        this->antidote = antidote;
-        this->phoenixdownI = phoenixdownI;
-        this->knightType = DRAGON;
-    }
-
-    void fight(BaseOpponent* opponent) override {
-        // implement fight method for DragonKnight
-        return BaseKnight::fight(opponent);
-    }
-};
-
-class NormalKnight : public BaseKnight {
-public:
-    NormalKnight(int id, int hp, int level, int gil, int antidote, int phoenixdownI)
-    {
-        this->id = id;
-        this->hp = hp;
-        this->maxhp = this->hp;
-        this->level = level;
-        this->gil = gil;
-        this->antidote = antidote;
-        this->phoenixdownI = phoenixdownI;
-        this->knightType = NORMAL;
-    }
-
-    void fight(BaseOpponent* opponent) override {
-        // implement fight method for NormalKnight
-        return BaseKnight::fight(opponent);
-    }
-};
 
 class Events {
 public:
