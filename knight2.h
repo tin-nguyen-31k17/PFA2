@@ -5,14 +5,16 @@
 
 // #define DEBUG
 
-enum ItemType { ANTIDOTE = 0, PHOENIXDOWN_I, PHOENIXDOWN_II, PHOENIXDOWN_III, PHOENIXDOWN_IV };
+enum ItemType { ANTIDOTE, PHOENIXDOWN_I, PHOENIXDOWN_II, PHOENIXDOWN_III, PHOENIXDOWN_IV };
 
 class BaseKnight;
 
 class BaseItem {
 public:
+    BaseItem() {};
     virtual bool canUse(BaseKnight* knight);
     virtual void use(BaseKnight* knight);
+    virtual ~BaseItem() {}
     ItemType itemType;
 };
 
@@ -29,23 +31,27 @@ protected:
     Node* head;
     BaseKnight* knight;
 public:
-    BaseBag(BaseKnight* knight, int maxSize) : head(nullptr), knight(knight) {}
+    BaseBag(BaseKnight* knight, int maxSize) : head(nullptr), knight(knight), maxSize(maxSize), size(0) {}
+    int getSize() const { return size; };
     virtual ~BaseBag();
     virtual bool insertFirst(BaseItem* item);
+    virtual void empty();
+    virtual bool removeFirst();
+    virtual void remove(BaseItem* item);
     virtual BaseItem* get(ItemType itemType);
     virtual string toString() const = 0;
 };
 
 
-enum OpponentType { MBear = 0, Bdit, Lupin, ELF, TROLL, Tbery, QCards, NRings, DGarden, OWeapon, HADES };
+enum OpponentType { MBear = 0, Bdit, Lupin, ELF, TROLL, Tbery, QCard, NRing, DGarden, OWeapon, HADES, ULTI };
 
 class BaseOpponent{
-protected:
-    OpponentType opponentType;
 public:
     int level;
     int dmg;
     int gil;
+    int hp;
+    OpponentType opponentType;
     static BaseOpponent * create(int level, int dmg, int gil, OpponentType opponentType);
     virtual ~BaseOpponent() {};
 };
@@ -66,17 +72,21 @@ protected:
     BaseBag * bag;
     KnightType knightType;
     BaseKnight * nextKnight;
+    
 public:
     static BaseKnight * create(int id, int maxhp, int level, int gil, int antidote, int phoenixdownI);
     string toString() const;
     virtual void fight(BaseOpponent * opponent);
     int getCurrentHP() const { return hp; }
     int getMaxHP() const { return maxhp; }
+    int getLevel() const { return level; }
     void restoreHP(int amount) { hp = min(maxhp, hp + amount); }
+    void restoreHP() { hp = maxhp; }
     bool isPoisoned = false;
-    void curePoison() { isPoisoned = false; }
     KnightType getKnightType() { return knightType; }
+    void handleHP();
     void setNextKnight(BaseKnight *knight) { nextKnight = knight; }
+    BaseKnight *deleteKnight(BaseKnight *knight);
     BaseKnight *getFront() { return nextKnight; }
     BaseBag *getBag() { return bag; }
     virtual ~BaseKnight() {};
@@ -96,8 +106,8 @@ protected:
 
 class ArmyKnights {
 private:    
-    BaseKnight * knights[1000];
     int count_;
+    BaseKnight * knights[1000];
 public:
     ArmyKnights (const string & file_armyknights);
     ~ArmyKnights();
@@ -105,7 +115,9 @@ public:
     bool adventure (Events * events);
     int count() const;
     BaseKnight* lastKnight() const;
+    BaseKnight* lastType() const;
 
+    int PaladinShield, LancelotSpear, GuinevereHair, ExcaliburSword;
     bool hasPaladinShield() const;
     bool hasLancelotSpear() const;
     bool hasGuinevereHair() const;
