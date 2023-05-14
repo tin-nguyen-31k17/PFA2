@@ -59,6 +59,8 @@ public:
 
 enum KnightType { PALADIN = 0, LANCELOT, DRAGON, NORMAL };
 
+class ArmyKnights;
+
 class BaseKnight {
 protected:
     int id;
@@ -76,17 +78,17 @@ protected:
 public:
     static BaseKnight * create(int id, int maxhp, int level, int gil, int antidote, int phoenixdownI);
     string toString() const;
-    virtual void fight(BaseOpponent * opponent);
+    virtual void fight(BaseOpponent* opponent, ArmyKnights* armyKnights);
     int getCurrentHP() const { return hp; }
     int getMaxHP() const { return maxhp; }
     int getLevel() const { return level; }
-    void restoreHP(int amount) { hp = min(maxhp, hp + amount); }
+    void restoreHP(int amount) { hp = min(maxhp, amount); }
     void restoreHP() { hp = maxhp; }
     bool isPoisoned = false;
     KnightType getKnightType() { return knightType; }
-    void handleHP();
+    void handleHP(ArmyKnights* armyKnights);
     void setNextKnight(BaseKnight *knight) { nextKnight = knight; }
-    BaseKnight *deleteKnight(BaseKnight *knight);
+    // BaseKnight *deleteKnight(BaseKnight *knight);
     BaseKnight *getFront() { return nextKnight; }
     BaseBag *getBag() { return bag; }
     virtual ~BaseKnight() {};
@@ -116,6 +118,7 @@ public:
     int count() const;
     BaseKnight* lastKnight() const;
     BaseKnight* lastType() const;
+    BaseKnight* deleteKnight(BaseKnight *knight);
 
     int PaladinShield, LancelotSpear, GuinevereHair, ExcaliburSword;
     bool hasPaladinShield() const;
