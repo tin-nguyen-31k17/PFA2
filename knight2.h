@@ -39,6 +39,7 @@ public:
     virtual bool removeFirst();
     virtual void remove(BaseItem* item);
     virtual BaseItem* get(ItemType itemType);
+    virtual BaseItem* getFirstPhoenix();
     virtual string toString() const = 0;
 };
 

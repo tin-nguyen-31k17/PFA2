@@ -44,3 +44,4 @@ build
 .vscode/settings.json
 main.dSYM/Contents/Resources/DWARF/main
 main
+*.txt

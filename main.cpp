@@ -1,27 +1,25 @@
 #include "knight2.h"
+#include <iostream>
+#include <sstream>
 
 int main(int argc, char ** argv) {
-    string file_armyknights, file_events;
-    if (argc == 1) {
-        file_armyknights = "tc1_armyknights"; // hard-code
-        file_events = "tc1_events";
-    }
-    else if (argc == 3) {
-        file_armyknights = argv[1];
-        file_events = argv[2];
-    }
-    else {
-        cout << "Error number of arguments" << endl;
-        exit(1);
-    }
-    
-    // BEGIN
-    KnightAdventure * knightAdventure = new KnightAdventure();
-    knightAdventure->loadArmyKnights(file_armyknights);
-    knightAdventure->loadEvents(file_events);
-    knightAdventure->run();
+    for (int i = 1; i <= 1000; i++) {
+        std::stringstream ss;
+        ss << "testcase_" << i << "_knights.txt";
+        cout << "testcase_" << i << "_knights.txt" << endl;
+        std::string file_armyknights = ss.str();
+        ss.str(std::string()); // Clear the stringstream
+        ss << "testcase_" << i << "_events.txt";
+        std::string file_events = ss.str();
 
-    delete knightAdventure;
+        // BEGIN
+        KnightAdventure * knightAdventure = new KnightAdventure();
+        knightAdventure->loadArmyKnights(file_armyknights);
+        knightAdventure->loadEvents(file_events);
+        knightAdventure->run();
+
+        delete knightAdventure;
+    }
 
     return 0;
 }

@@ -406,7 +406,7 @@ public:
         int current_hp = knight->getCurrentHP();
 
         if (current_hp <= 0) return true;
-        else if (current_hp < max_hp / 4) return true;
+        else if (current_hp < max_hp / 3) return true;
         else return false;
     }
 
@@ -421,7 +421,7 @@ public:
         }
         else
         {
-            knight->restoreHP(max_hp / 4);
+            knight->restoreHP(current_hp + max_hp / 4);
         }
         knight->getBag()->remove(this);
     }
@@ -441,18 +441,8 @@ public:
         int max_hp = knight->getMaxHP();
         int current_hp = knight->getCurrentHP();
 
-        if (current_hp <= 0)
-        {
-            return true;
-        }
-        else if (current_hp < max_hp / 5)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        if (current_hp < max_hp / 2) return true;
+        else return false;
     }
 
     virtual void use(BaseKnight *knight)
@@ -460,19 +450,30 @@ public:
         int max_hp = knight->getMaxHP();
         int current_hp = knight->getCurrentHP();
 
-        if (current_hp <= 0)
-        {
-            knight->restoreHP(max_hp / 2);
-        }
-        else
-        {
-            knight->restoreHP(max_hp / 5);
-        }
+        if (current_hp <= 0) knight->restoreHP(max_hp / 2);
+        else knight->restoreHP(current_hp + max_hp / 5);
         knight->getBag()->remove(this);
     }
 
     ~PhoenixDownIV() {}
 };
+
+BaseItem* BaseBag::getFirstPhoenix()
+{
+    Node* current = head;
+    while (current != nullptr) {
+        if (current->item->itemType == PHOENIXDOWN_I ||
+            current->item->itemType == PHOENIXDOWN_II ||
+            current->item->itemType == PHOENIXDOWN_III ||
+            current->item->itemType == PHOENIXDOWN_IV) {
+            return current->item;
+        }
+        current = current->next;
+    }
+    return nullptr;  // PhoenixDown not found
+}
+
+
 /* * * END implementation of class BaseItem * * */
 
 /* * * BEGIN implementation of class Knight's Bag * * */
@@ -485,7 +486,7 @@ public:
         for (int i = 0; i < a; i++)
         {
             // insertFirst(new PhoenixDownI());
-            PaladinBag::insertFirst(new PhoenixDownII());
+            PaladinBag::insertFirst(new PhoenixDownI());
         }
         for (int i = 0; i < b; i++)
         {
@@ -589,18 +590,9 @@ string BaseKnight::toString() const
 }
 
 void BaseKnight::handleHP(ArmyKnights* army) {
-    if (bag->get(PHOENIXDOWN_I) 
-        && bag->get(PHOENIXDOWN_I)->canUse(this)) {
-            bag->get(PHOENIXDOWN_I)->use(this);
-    } else if (bag->get(PHOENIXDOWN_II) 
-        && bag->get(PHOENIXDOWN_II)->canUse(this)) {
-            bag->get(PHOENIXDOWN_II)->use(this);
-    } else if (bag->get(PHOENIXDOWN_III) 
-        && bag->get(PHOENIXDOWN_III)->canUse(this)) {
-            bag->get(PHOENIXDOWN_III)->use(this);
-    } else if (bag->get(PHOENIXDOWN_IV) 
-        && bag->get(PHOENIXDOWN_IV)->canUse(this)) {
-            bag->get(PHOENIXDOWN_IV)->use(this);
+    BaseItem* firstPhoenix = bag->getFirstPhoenix();
+    if (firstPhoenix != nullptr && firstPhoenix->canUse(this)) {
+        firstPhoenix->use(this);
     } else {
         if (this->gil >= 100) {
             this->gil = this->gil - 100;
@@ -666,7 +658,20 @@ public:
 
     void fight(BaseOpponent *opponent, ArmyKnights* army) override
     {
-        return BaseKnight::fight(opponent, army);
+        // implement fight method for LancelotKnight
+        switch (opponent->opponentType)
+        {
+            case MBear:
+            case Lupin:
+            case Bdit:
+            case ELF:
+            case TROLL:
+                gil = min(gil + opponent->gil, 999);
+                break;
+            default:
+                return BaseKnight::fight(opponent, army);
+                break;
+        }
     }
 };
 
@@ -689,7 +694,15 @@ public:
 
     void fight(BaseOpponent *opponent, ArmyKnights* army) override
     {
-        return BaseKnight::fight(opponent, army);
+        // implement fight method for DragonKnight
+        switch (opponent->opponentType)
+        {
+            case Tbery:
+                break;
+            default:
+                return BaseKnight::fight(opponent, army);
+                break;
+        }
     }
 };
 
@@ -836,7 +849,23 @@ void BaseKnight::fight(BaseOpponent* opponent, ArmyKnights* army)
             case TROLL:
             {
                 hp = hp - opponent->dmg * (levelO - level);
-                if(hp <= 0) handleHP(army);
+                if (hp < maxhp/4 && hp > 0 && bag->get(PHOENIXDOWN_II)) {
+                    bag->get(PHOENIXDOWN_II)->use(this);
+                    break;
+                }
+                else if (hp < maxhp/3 && hp > 0 && bag->get(PHOENIXDOWN_III)) {
+                    bag->get(PHOENIXDOWN_III)->use(this);
+                    break;
+                }
+                else if (hp < maxhp/2 && hp > 0 && bag->get(PHOENIXDOWN_IV)) {
+                    bag->get(PHOENIXDOWN_IV)->use(this);
+                    break;
+                }
+                else if(hp <= 0) {
+                    handleHP(army);
+                    break;
+                }
+                else break;
                 break;
             }
             case Tbery:
@@ -846,18 +875,15 @@ void BaseKnight::fight(BaseOpponent* opponent, ArmyKnights* army)
                     bag->get(ANTIDOTE)->use(this);
                     break;
                 } else if (!bag->get(ANTIDOTE) && isPoisoned) {
-                    hp -= 10;
-                    if (hp <= 0) handleHP(army);
+                    
                     if (bag->getSize() > 3) {
                         bag->removeFirst();
                         bag->removeFirst();
                         bag->removeFirst();
-                        break;
-                    } else if (bag->getSize() <= 3) {
-                        bag->empty();
-                        break;
-                    }
+                    } else if (bag->getSize() <= 3) bag->empty();
                 } else break;
+                hp -= 10;
+                if (hp <= 0) handleHP(army);
                 break;
             }
             case QCard:
@@ -898,22 +924,18 @@ void BaseKnight::fight(BaseOpponent* opponent, ArmyKnights* army)
                 handleHP(army);
                 break;
             }
-
+            case ULTI:
+            {
+                opponent->hp = opponent->hp - (hp * baseDmg * level);
+                if (opponent->hp != 0) {
+                    hp = 0;
+                    handleHP(army);
+                }
+                else break;
+            }
             default:
             {
                 cout << "Invalid opponent type: " << opponent->opponentType << endl;
-                // else if (bag->get(PHOENIXDOWN_II)
-                // && bag->get(PHOENIXDOWN_II)->canUse(this)) {
-                //     bag->get(PHOENIXDOWN_II)->use(this);
-                // }
-                // else if (bag->get(PHOENIXDOWN_III)
-                // && bag->get(PHOENIXDOWN_III)->canUse(this)) {
-                //     bag->get(PHOENIXDOWN_III)->use(this);
-                // }
-                // else if (bag->get(PHOENIXDOWN_IV)
-                // && bag->get(PHOENIXDOWN_IV)->canUse(this)) {
-                //     bag->get(PHOENIXDOWN_IV)->use(this);
-                // }
                 break;
             }
         }
@@ -1131,31 +1153,18 @@ bool ArmyKnights::adventure(Events *events)
         case 99:
         {
             BaseOpponent *Ultimecia = BaseOpponent::create(999, 0, 0, ULTI);
-            if (ArmyKnights::hasExcaliburSword())
-            {
-                // for (int j = 0; j < count_; j++) {
-                //     delete knights[j];
-                //     knights[j] = nullptr;  // Set the deleted pointer to null
-                //     count_ --;
-                // }
-                break;
-            }
+            if (ArmyKnights::hasExcaliburSword()) break;
             else if (ArmyKnights::hasPaladinShield() && ArmyKnights::hasLancelotSpear() && ArmyKnights::hasGuinevereHair())
             {
                 if (lastType() == nullptr)
                 {
-                    for (int j = 0; j < count_; j++)
+                    while (count_ != 0)
                     {
-                        // delete knights[j];
-                        // knights[j] = nullptr;  // Set the deleted pointer to null
                         count_--;
                     }
                     break;
                 }
-                else
-                {
-                    lastType()->fight(Ultimecia, this);
-                }
+                else lastType()->fight(Ultimecia, this);
                 delete Ultimecia;
                 break;
             }
@@ -1171,10 +1180,7 @@ bool ArmyKnights::adventure(Events *events)
             printInfo();
             break;
         }
-        else
-        {
-            printInfo();
-        }
+        else printInfo();
     }
     return false;
 }
@@ -1186,19 +1192,12 @@ int ArmyKnights::count() const
 
 BaseKnight *ArmyKnights::lastKnight() const
 {
-    if (count_ == 0)
-    {
-        return nullptr;
-    }
+    if (count_ == 0) return nullptr;
     int index = count_ - 1;
     while (!knights[index])
     {
         index--;
-        if (index < 0)
-        {
-            // If all Knights have fallen, return nullptr.
-            return nullptr;
-        }
+        if (index < 0) return nullptr;
     }
     return knights[index];
 }
@@ -1213,11 +1212,7 @@ BaseKnight *ArmyKnights::lastType() const
     while (!knights[index])
     {
         index--;
-        if (index < 0)
-        {
-            // If all Knights have fallen, return nullptr.
-            return nullptr;
-        }
+        if (index < 0) return nullptr;
     }
     if (knights[index]->getKnightType() == PALADIN ||
         knights[index]->getKnightType() == LANCELOT ||
@@ -1230,37 +1225,25 @@ BaseKnight *ArmyKnights::lastType() const
 
 bool ArmyKnights::hasPaladinShield() const
 {
-    if (PaladinShield > 0)
-    {
-        return true;
-    }
+    if (PaladinShield > 0) return true; 
     return false;
 }
 
 bool ArmyKnights::hasLancelotSpear() const
 {
-    if (LancelotSpear > 0)
-    {
-        return true;
-    }
+    if (LancelotSpear > 0) return true;
     return false;
 }
 
 bool ArmyKnights::hasGuinevereHair() const
 {
-    if (GuinevereHair > 0)
-    {
-        return true;
-    }
+    if (GuinevereHair > 0) return true;
     return false;
 }
 
 bool ArmyKnights::hasExcaliburSword() const
 {
-    if (ExcaliburSword > 0)
-    {
-        return true;
-    }
+    if (ExcaliburSword > 0) return true;
     return false;
 }
 
@@ -1335,6 +1318,7 @@ int Events::get(int i) const
 }
 /* * END implementation of class Events * * */
 
+/* * * BEGIN implementation of class BaseItem * * */
 bool BaseItem::canUse(BaseKnight *knight) {
     return false;
 }
@@ -1342,3 +1326,4 @@ bool BaseItem::canUse(BaseKnight *knight) {
 void BaseItem::use(BaseKnight *knight)
 {
 }
+/* * * END implementation of class BaseItem * * */
